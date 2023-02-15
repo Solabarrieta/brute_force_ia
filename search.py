@@ -123,6 +123,47 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+
+    queue = util.Queue()
+    visited = []
+    path = []
+
+    state = problem.getStartState()
+    visited.append(state)
+    isGoal = problem.isGoalState(state)
+
+    if isGoal:
+        return []
+
+    successors = problem.getSuccessors(state)
+
+    queue = funciones.pushSuccessors(successors, queue, visited)
+
+    while True:
+
+        if queue.isEmpty():
+            break
+
+        state = queue.pop()
+        queue.push(state)
+        isGoal = problem.isGoalState(state[0])
+
+        if isGoal:
+            path.append(state[1])
+            break
+
+        isVisited = funciones.isStateVisited(visited, state[0])
+
+        if not isVisited:
+            visited.append(state[0])
+            path.append(state[1])
+            successors = problem.getSuccessors(state[0])
+            queue = funciones.pushSuccessors(successors, queue, visited)
+        else:
+            queue.pop()
+            path.pop()
+    return path
+
     util.raiseNotDefined()
 
 
