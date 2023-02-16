@@ -92,6 +92,11 @@ def depthFirstSearch(problem):
 
     successors = problem.getSuccessors(state)
 
+    # for s in successors:
+    #     if problem.isGoalState(s):
+    #         path = [s[1]]
+    #         return path
+
     stack = funciones.pushSuccessors(successors, stack, visited)
 
     while True:
@@ -113,6 +118,7 @@ def depthFirstSearch(problem):
             visited.append(state[0])
             path.append(state[1])
             successors = problem.getSuccessors(state[0])
+            successors = [s for s in successors if s[0] not in visited]
             stack = funciones.pushSuccessors(successors, stack, visited)
         else:
             stack.pop()
@@ -123,48 +129,39 @@ def depthFirstSearch(problem):
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
-
     queue = util.Queue()
     visited = []
+    directions = {}
+
+    start = [problem.getStartState()]
+    queue.push(start)
+    directions[start[0]] = []
     path = []
 
-    state = problem.getStartState()
-    visited.append(state)
-    isGoal = problem.isGoalState(state)
-
-    if isGoal:
-        return []
-
-    successors = problem.getSuccessors(state)
-
-    queue = funciones.pushSuccessors(successors, queue, visited)
-
     while True:
-
         if queue.isEmpty():
             break
-
         state = queue.pop()
-        queue.push(state)
         isGoal = problem.isGoalState(state[0])
-
         if isGoal:
-            path.append(state[1])
+            print("Goal is: ", state[0])
+            path = directions[state[0]]
             break
 
-        isVisited = funciones.isStateVisited(visited, state[0])
-
-        if not isVisited:
+        if state[0] not in visited:
             visited.append(state[0])
-            path.append(state[1])
             successors = problem.getSuccessors(state[0])
+            successors = [s for s in successors if s[0] not in visited]
             queue = funciones.pushSuccessors(successors, queue, visited)
+            parentPath = directions[state[0]]
+            directions = funciones.setSuccessorsPaths(
+                directions, successors, parentPath)
+            # Devolver el camino mas corto
         else:
-            queue.pop()
-            path.pop()
+            if not queue.isEmpty():
+                queue.pop
     return path
-
-    util.raiseNotDefined()
+    # util.raiseNotDefined
 
 
 def uniformCostSearch(problem):
