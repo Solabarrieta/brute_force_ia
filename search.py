@@ -73,11 +73,7 @@ def depthFirstSearch(problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
 
-    print("Start:", problem.getStartState())
-    print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
-    print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** YOUR CODE HERE ***"
 
     stack = util.Stack()
     visited = []
@@ -91,11 +87,6 @@ def depthFirstSearch(problem):
         return []
 
     successors = problem.getSuccessors(state)
-
-    # for s in successors:
-    #     if problem.isGoalState(s):
-    #         path = [s[1]]
-    #         return path
 
     stack = funciones.pushSuccessors(successors, stack, visited)
 
@@ -128,7 +119,7 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+
     queue = util.Queue()
     visited = []
     directions = {}
@@ -149,6 +140,7 @@ def breadthFirstSearch(problem):
             break
 
         if state[0] not in visited:
+
             visited.append(state[0])
             successors = problem.getSuccessors(state[0])
             successors = [s for s in successors if s[0] not in visited]
@@ -156,17 +148,53 @@ def breadthFirstSearch(problem):
             parentPath = directions[state[0]]
             directions = funciones.setSuccessorsPaths(
                 directions, successors, parentPath)
-            # Devolver el camino mas corto
+
         else:
             if not queue.isEmpty():
                 queue.pop
     return path
-    # util.raiseNotDefined
 
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+
+    pqueue = util.PriorityQueue()
+    visited = []
+    path = []
+    addedToQ = []
+
+    start = problem.getStartState()
+    isGoal = problem.isGoalState(start)
+    start = [start, [], 0]
+
+    if isGoal:
+        return []
+    pqueue.push(start, start[2])
+
+    while True:
+        if pqueue.isEmpty():
+            break
+
+        state = pqueue.pop()
+        isGoal = problem.isGoalState(state[0])
+
+        if isGoal:
+            path = state[1]
+            break
+
+        isVisited = funciones.isStateVisited(visited, state)
+
+        if not isVisited:
+            visited.append(state[0])
+            successors = problem.getSuccessors(state[0])
+            successors = funciones.updateSuccessors(successors, state, visited)
+            pqueue = funciones.pushPQueue(successors, pqueue)
+
+        else:
+            pqueue.pop()
+
+    return path
     util.raiseNotDefined()
 
 
