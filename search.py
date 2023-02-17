@@ -162,7 +162,6 @@ def uniformCostSearch(problem):
     pqueue = util.PriorityQueue()
     visited = []
     path = []
-    addedToQ = []
 
     start = problem.getStartState()
     isGoal = problem.isGoalState(start)
@@ -183,7 +182,7 @@ def uniformCostSearch(problem):
             path = state[1]
             break
 
-        isVisited = funciones.isStateVisited(visited, state)
+        isVisited = funciones.isStateVisited(visited, state[0])
 
         if not isVisited:
             visited.append(state[0])
@@ -191,11 +190,7 @@ def uniformCostSearch(problem):
             successors = funciones.updateSuccessors(successors, state, visited)
             pqueue = funciones.pushPQueue(successors, pqueue)
 
-        else:
-            pqueue.pop()
-
     return path
-    util.raiseNotDefined()
 
 
 def nullHeuristic(state, problem=None):
